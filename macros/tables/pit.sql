@@ -50,13 +50,13 @@ WITH as_of_dates AS (
 {%- if dbtvault.is_any_incremental() %}
 
 last_safe_load_datetime AS (
-    SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
+    SELECT MIN(LOAD_DATETIME) FROM (
     {%- for stg in stage_tables -%}
         {%- set stage_ldts = stage_tables[stg] %}
         {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
-    )
+    ) AS LAST_SAFE_LOAD_DATETIME
 ),
 
 as_of_grain_old_entries AS (
