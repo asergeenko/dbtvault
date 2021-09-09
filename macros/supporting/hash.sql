@@ -63,6 +63,7 @@
                 {{- "\n)) AS TEXT) AS {}".format(alias) -}}
             {%- else -%}
                 {{- "\n), '{}')) AS TEXT) AS {}".format(all_null | join(""), alias) -}}
+            {%- endif -%}
         {%- else -%}
 
             {%- do all_null.append(concat_string) -%}
