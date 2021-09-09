@@ -40,7 +40,7 @@ WITH source_data AS (
 {% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
-
+    SELECT * FROM ( 
     SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
            RANK() OVER (
                PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
@@ -52,7 +52,8 @@ latest_records AS (
         FROM source_data
     ) AS source_records
     ON {{ dbtvault.prefix([src_pk], 'current_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-    QUALIFY rank = 1
+    ) as s
+WHERE rank = 1
 ),
 {%- endif %}
 
